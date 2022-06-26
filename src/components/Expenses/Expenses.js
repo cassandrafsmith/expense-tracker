@@ -11,9 +11,33 @@ const Expenses = (props) => {
        setSelectedYear(selection);
     };
 
-    // const filteredExpenses = props.data.filter((expense) => {
-    //    return expense.date.getFullYear().toString() === selectedYear;
-    // });     
+    const filteredExpenses = props.data.filter((expense) => {
+       return expense.date.getFullYear().toString() === selectedYear;
+    });     
+
+    let expensesContent = props.data;
+
+    if (selectedYear === 'All'){
+        expensesContent = props.data.map((expense) => (
+            <ExpenseItem 
+                key={expense.id}
+                title={expense.title} 
+                amount={expense.amount} 
+                date={expense.date} 
+            />
+        ))
+    } else if(filteredExpenses.length > 0){
+        expensesContent =  filteredExpenses.map((expense) => (
+            <ExpenseItem 
+                key={expense.id}
+                title={expense.title} 
+                amount={expense.amount} 
+                date={expense.date} 
+            />
+            ))                    
+    } else {
+        expensesContent = <p>No Content found.</p>
+    }
 
     return(
         <div>            
@@ -22,26 +46,7 @@ const Expenses = (props) => {
                     selected={selectedYear} 
                     onSelectYear={selectedYearHandler} 
                 />  
-                {selectedYear ==='All' ?      
-                    props.data.map((expense) => (
-                        <ExpenseItem 
-                            key={expense.id}
-                            title={expense.title} 
-                            amount={expense.amount} 
-                            date={expense.date} 
-                        />
-                    )) :
-                    props.data.filter((expense) => ( 
-                        expense.date.getFullYear().toString() === selectedYear)
-                        ).map((expense) => (
-                        <ExpenseItem 
-                            key={expense.id}
-                            title={expense.title} 
-                            amount={expense.amount} 
-                            date={expense.date} 
-                        />
-                    ))    
-                }               
+                {expensesContent}               
             </Card>  
         </div>              
     )
